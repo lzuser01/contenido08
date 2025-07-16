@@ -189,13 +189,38 @@ castBtn.rel = 'nofollow';
 castBtn.className = 'flex items-center space-x-2 bg-gray-700 hover:bg-yellow-600 transition-colors text-white px-4 py-2 rounded font-semibold';
 castBtn.innerHTML = '<i class="fas fa-tv text-xl"></i><span>Transmitir</span>';
 
-
 var downloadBtn = document.createElement('a');
-downloadBtn.href = 'Intent://' + cleanAltURL + '#Intent;package=idm.internet.download.manager;scheme=https;end';
-downloadBtn.target = '_blank';
-downloadBtn.rel = 'nofollow';
+downloadBtn.href = '#';
+downloadBtn.onclick = function(e) {
+  e.preventDefault();
+  const url = cleanAltURL;
+
+  // Primer intento con 1DM+
+  const plusIntent = 'intent://' + url + '#Intent;package=idm.internet.download.manager.plus;scheme=https;end';
+  const normalIntent = 'intent://' + url + '#Intent;package=idm.internet.download.manager;scheme=https;end';
+
+  // Crear iframe invisible
+  var tempIframe = document.createElement('iframe');
+  tempIframe.style.display = 'none';
+  document.body.appendChild(tempIframe);
+
+  // Intentar abrir 1DM+
+  tempIframe.src = plusIntent;
+
+  // Después de 2 segundos, intentar con 1DM normal
+  setTimeout(function() {
+    tempIframe.src = normalIntent;
+  }, 2000);
+
+  // Limpiar el iframe después
+  setTimeout(function() {
+    document.body.removeChild(tempIframe);
+  }, 4000);
+};
+
 downloadBtn.className = 'flex items-center space-x-2 bg-gray-700 hover:bg-yellow-600 transition-colors text-white px-4 py-2 rounded font-semibold';
 downloadBtn.innerHTML = '<i class="fas fa-download text-xl"></i><span>Descargar</span>';
+
 
 // Agregar botones al contenedor
 repartoSection.appendChild(castBtn);
